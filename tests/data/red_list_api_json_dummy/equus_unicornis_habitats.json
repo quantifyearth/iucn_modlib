@@ -1,0 +1,19 @@
+{
+    "name": "Equus unicornis",
+    "result": [
+    {
+    "code": "4.4",
+    "habitat": "Grassland - Temperate",
+    "suitability": "Suitable",
+    "season": null,
+    "majorimportance": "Yes"
+    },
+    {
+    "code": "8.2",
+    "habitat": "Desert - Temperate",
+    "suitability": "Suitable",
+    "season": null,
+    "majorimportance": "Yes"
+    }
+    ]
+    }

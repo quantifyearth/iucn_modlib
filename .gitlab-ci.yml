@@ -1,0 +1,12 @@
+run_pytests:
+  stage: test
+  image: python:latest
+  script:
+    - python -m pip install -r requirements.txt
+    - python -m pytest --junitxml=testLog.xml
+  artifacts:
+      paths:
+          - testLog.xml
+      reports:
+          junit: testLog.xml
+
