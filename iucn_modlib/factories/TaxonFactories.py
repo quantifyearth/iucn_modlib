@@ -249,7 +249,7 @@ def TaxonFactoryRedListBatch(species, source, fixElevation = True, fixHabitats =
         main_common_name   = unwrap(common_names,'name'),
         authority          = unwrap(taxonomy,'authority'),
         published_year     = unwrap(assessments, 'yearPublished'),#assessments['yearPublished'].values[0],
-        assessment_date    = unwrap(assessments,'assessmentDate')#assessments['assessmentDate'].values[0],
+        assessment_date    = unwrap(assessments,'assessmentDate'),#assessments['assessmentDate'].values[0],
         category           = unwrap(assessments,'redlistCategory'),#assessments['redlistCategory'].values[0],
         criteria           = unwrap(assessments,'redlistCriteria'),#assessments['redlistCriteria'].values[0],
         population_trend   = unwrap(assessments,'populationTrend'),#assessments['populationTrend'].values[0],
