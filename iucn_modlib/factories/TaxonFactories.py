@@ -7,6 +7,14 @@ import pandas
 import numpy
 import os
 
+
+def unwrap(val, key):
+    try:
+        return val[key].values[0]
+    except KeyError:
+        return ""
+
+
 def TaxonFactoryRedListAPI(
         sp, token,
         fixElevation = True, fixHabitats = True
@@ -229,31 +237,32 @@ def TaxonFactoryRedListBatch(species, source, fixElevation = True, fixHabitats =
     all_other_fields = source['all_other_fields'].loc[source['all_other_fields'].internalTaxonId == taxid]
     common_names = source['common_names'].loc[source['common_names'].internalTaxonId == taxid].loc[source['common_names'].main == True]
     # create taxon object
+    val[key].values[0]
     tax = Taxon(
         taxonid            = assessments['internalTaxonId'].values[0],
         scientific_name    = assessments['scientificName'].values[0],
-        kingdom            = "",#taxonomy['kingdomName'].values[0],
-        phylum             = "",#taxonomy['phylumName'].values[0],
-        class_             = "",#taxonomy['className'].values[0],
-        order              = "",#taxonomy['orderName'].values[0],
-        family             = "",#taxonomy['familyName'].values[0],
-        genus              = "",#taxonomy['genusName'].values[0],
-        main_common_name   = "",# common_names['name'].values[0],
-        authority          = "",#taxonomy['authority'].values[0],
-        published_year     = "",#assessments['yearPublished'].values[0],
-        assessment_date    = "",#assessments['assessmentDate'].values[0],
-        category           = "",#assessments['redlistCategory'].values[0],
-        criteria           = "",#assessments['redlistCriteria'].values[0],
-        population_trend   = "",#assessments['populationTrend'].values[0],
-        marine_system      = "",#assessments['systems'].values[0].find('Marine') != -1,
-        freshwater_system  = "",#assessments['systems'].values[0].find('Freshwater') != -1,
-        terrestrial_system = "",#assessments['systems'].values[0].find('Terrestrial') != -1,
+        kingdom            = taxonomy['kingdomName'].values[0],
+        phylum             = taxonomy['phylumName'].values[0],
+        class_             = taxonomy['className'].values[0],
+        order              = taxonomy['orderName'].values[0],
+        family             = taxonomy['familyName'].values[0],
+        genus              = taxonomy['genusName'].values[0],
+        main_common_name   = unwrap(common_names,'name'),
+        authority          = taxonomy['authority'].values[0],
+        published_year     = assessments['yearPublished'].values[0],
+        assessment_date    = assessments['assessmentDate'].values[0],
+        category           = assessments['redlistCategory'].values[0],
+        criteria           = assessments['redlistCriteria'].values[0],
+        population_trend   = assessments['populationTrend'].values[0],
+        marine_system      = assessments['systems'].values[0].find('Marine') != -1,
+        freshwater_system  = assessments['systems'].values[0].find('Freshwater') != -1,
+        terrestrial_system = assessments['systems'].values[0].find('Terrestrial') != -1,
         #assessor           = X[''].values[0],
         #reviewer           = X[''].values[0],
         assessor           = 'AOH modeller: not available in batch',
         reviewer           = 'AOH modeller: not available in batch',
-        aoo_km2            = "",#all_other_fields['AOO.range'].values[0],
-        eoo_km2            = "",#all_other_fields['EOO.range'].values[0],
+        aoo_km2            = unwrap(all_other_fields, 'AOO.range'),
+        eoo_km2            = all_other_fields['EOO.range'].values[0],
         elevation_upper    = int(all_other_fields['ElevationUpper.limit'].values[0]) \
             if not numpy.isnan(all_other_fields['ElevationUpper.limit'].values[0]) else None,
         elevation_lower    = int(all_other_fields['ElevationLower.limit'].values[0]) \
