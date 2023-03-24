@@ -11,7 +11,7 @@ import os
 def unwrap(val, key):
     try:
         return val[key].values[0]
-    except KeyError:
+    except (KeyError, IndexError):
         return ""
 
 
