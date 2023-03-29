@@ -7,6 +7,14 @@ import pandas
 import numpy
 import os
 
+
+def unwrap(val, key):
+    try:
+        return val[key].values[0]
+    except (KeyError, IndexError):
+        return ""
+
+
 def TaxonFactoryRedListAPI(
         sp, token,
         fixElevation = True, fixHabitats = True
@@ -232,28 +240,26 @@ def TaxonFactoryRedListBatch(species, source, fixElevation = True, fixHabitats =
     tax = Taxon(
         taxonid            = assessments['internalTaxonId'].values[0],
         scientific_name    = assessments['scientificName'].values[0],
-        kingdom            = taxonomy['kingdomName'].values[0],
-        phylum             = taxonomy['phylumName'].values[0],
-        class_             = taxonomy['className'].values[0],
-        order              = taxonomy['orderName'].values[0],
-        family             = taxonomy['familyName'].values[0],
-        genus              = taxonomy['genusName'].values[0],
-        main_common_name   = common_names['name'].values[0],
-        authority          = taxonomy['authority'].values[0],
-        published_year     = assessments['yearPublished'].values[0],
-        assessment_date    = assessments['assessmentDate'].values[0],
-        category           = assessments['redlistCategory'].values[0],
-        criteria           = assessments['redlistCriteria'].values[0],
-        population_trend   = assessments['populationTrend'].values[0],
-        marine_system      = assessments['systems'].values[0].find('Marine') != -1,
-        freshwater_system  = assessments['systems'].values[0].find('Freshwater') != -1,
-        terrestrial_system = assessments['systems'].values[0].find('Terrestrial') != -1,
-        #assessor           = X[''].values[0],
-        #reviewer           = X[''].values[0],
+        kingdom            = unwrap(taxonomy,'kingdomName'),
+        phylum             = unwrap(taxonomy, 'phylumName'),
+        class_             = unwrap(taxonomy,'className'),
+        order              = unwrap(taxonomy, 'orderName'),
+        family             = unwrap(taxonomy,'familyName'),
+        genus              = unwrap(taxonomy,'genusName'),
+        main_common_name   = unwrap(common_names,'name'),
+        authority          = unwrap(taxonomy,'authority'),
+        published_year     = unwrap(assessments, 'yearPublished'),
+        assessment_date    = unwrap(assessments,'assessmentDate'),
+        category           = unwrap(assessments,'redlistCategory'),
+        criteria           = unwrap(assessments,'redlistCriteria'),
+        population_trend   = unwrap(assessments,'populationTrend'),
+        marine_system      = unwrap(assessments,'systems').find('Marine') != -1,
+        freshwater_system  = unwrap(assessments,'systems').find('Freshwater') != -1,
+        terrestrial_system = unwrap(assessments,'systems').find('Terrestrial') != -1,
         assessor           = 'AOH modeller: not available in batch',
         reviewer           = 'AOH modeller: not available in batch',
-        aoo_km2            = all_other_fields['AOO.range'].values[0],
-        eoo_km2            = all_other_fields['EOO.range'].values[0],
+        aoo_km2            = unwrap(all_other_fields, 'AOO.range'),
+        eoo_km2            = unwrap(all_other_fields,'EOO.range'),
         elevation_upper    = int(all_other_fields['ElevationUpper.limit'].values[0]) \
             if not numpy.isnan(all_other_fields['ElevationUpper.limit'].values[0]) else None,
         elevation_lower    = int(all_other_fields['ElevationLower.limit'].values[0]) \
@@ -262,10 +268,6 @@ def TaxonFactoryRedListBatch(species, source, fixElevation = True, fixHabitats =
             if not numpy.isnan(all_other_fields['DepthUpper.limit'].values[0]) else None,
         depth_lower        = int(all_other_fields['DepthLower.limit'].values[0]) \
             if not numpy.isnan(all_other_fields['DepthLower.limit'].values[0]) else None,
-        #errata_flag        = X[''].values[0],
-        #errata_reason      = X[''].values[0],
-        #amended_flag       = X[''].values[0],
-        #amended_reason     = X[''].values[0],
         errata_flag        = 'AOH modeller: not available in batch',
         errata_reason      = 'AOH modeller: not available in batch',
         amended_flag       = 'AOH modeller: not available in batch',
