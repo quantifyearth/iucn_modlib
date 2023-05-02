@@ -8,7 +8,7 @@ with open("LICENSE.txt", "r", encoding="utf-8") as fh:
 
 setuptools.setup(
     name="iucn_modlib",
-    version="0.1",
+    version="0.1.2",
     author="Daniele Baisero",
     author_email="daniele.baisero@gmail.com",
     description="A package to facilitate AOH model development",
