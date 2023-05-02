@@ -42,47 +42,37 @@ class Taxon:
     amended_flag: str
     amended_reason: str
     habitats: List = field(default_factory=lambda: [])
-    
+
+    def habitatsRaw(self, habitatFilters = None):
+        # if habitats are empty, return empty list
+        if len(self.habitats) == 0:
+            return []
+        if habitatFilters is None:
+            return self.habitats
+        else:
+            habitats = self.habitats
+            if habitatFilters.season is not None:
+                habitats = [ h for h in habitats if h['season'] in habitatFilters.season ]
+            if habitatFilters.suitability is not None:
+                habitats = [ h for h in habitats if h['suitability'] in habitatFilters.suitability ]
+            if habitatFilters.majorImportance is not None:
+                habitats = [ h for h in habitats if h['majorimportance'] in habitatFilters.majorImportance ]
+            return habitats
+
     def habitatCodes(self, habitatFilters = None):
         """Return habitat codes
 
         If habitatFilters (habitat filters object) is provided, filters the codes.
         """
-        # if habitats are empty, return empty list
-        if len(self.habitats) == 0:
-            return []
-        if habitatFilters is None:
-            return [ h['code'] for h in self.habitats ]
-        else:
-            habitats = self.habitats
-            if habitatFilters.season is not None:
-                habitats = [ h for h in habitats if h['season'] in habitatFilters.season ]
-            if habitatFilters.suitability is not None:
-                habitats = [ h for h in habitats if h['suitability'] in habitatFilters.suitability ]
-            if habitatFilters.majorImportance is not None:
-                habitats = [ h for h in habitats if h['majorimportance'] in habitatFilters.majorImportance ]
-            return [ h['code'] for h in habitats ]
-    
+        return [ h['code'] for h in self.habitatsRaw(habitatFilters) ]
+
     def habitatNames(self, habitatFilters = None):
         """Return habitat names
 
         If habitatFilters (habitat filters object) is provided, filters the names.
         """
-        # if habitats are empty, return empty list
-        if len(self.habitats) == 0:
-            return []
-        if habitatFilters is None:
-            return [ h['habitat'] for h in self.habitats ]
-        else:
-            habitats = self.habitats
-            if habitatFilters.season is not None:
-                habitats = [ h for h in habitats if h['season'] in habitatFilters.season ]
-            if habitatFilters.suitability is not None:
-                habitats = [ h for h in habitats if h['suitability'] in habitatFilters.suitability ]
-            if habitatFilters.majorImportance is not None:
-                habitats = [ h for h in habitats if h['majorimportance'] in habitatFilters.majorImportance ]
-            return [ h['habitat'] for h in habitats ]
-    
+        return [ h['habitat'] for h in self.habitatsRaw(habitatFilters) ]
+
     def fix(self, fixType):
         """Fixes elements in the Taxon object
 
